@@ -43,6 +43,7 @@ import oci
 # from genai_langchain_integration.langchain_oci import OCIGenAI
 from langchain_community.llms import OCIGenAI
 from aqua_cllm import * # Custom LLM langchain class created by RG
+from ampA1_cllm import * # Custom LLM langchain class created by RG
 # from genai_langchain_integration.langchain_oci_embeddings import OCIGenAIEmbeddings
 from langchain_community.embeddings import OCIGenAIEmbeddings
 
@@ -190,6 +191,16 @@ def build_llm(llm_type):
                 top_p = 1
                 )
         print(f'Config used for AQUA LLM:\n{llm}')
+
+    elif llm_type == "OCI_AmpereA1":
+         llm = OCI_AmpereA1_LLM(
+                temperature=TEMPERATURE, 
+                # compartment_id=compartment_id, 
+                # service_endpoint=OCI_AQUA_ENDPOINT,        
+                max_tokens = MAX_TOKENS, 
+                top_k = top_k, 
+                top_p = 1
+                )
 
     return llm
 

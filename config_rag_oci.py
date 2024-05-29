@@ -55,7 +55,8 @@ ADD_RERANKER = False
 #
 # LLM_TYPE = "COHERE"
 # LLM_TYPE = "OCI"
-LLM_TYPE = "OCI_DS_AQUA"
+# LLM_TYPE = "OCI_DS_AQUA"
+LLM_TYPE = "OCI_AmpereA1"
 
 # 
 # type of LLM Model. The choice has been parametrized
