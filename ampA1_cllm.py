@@ -70,8 +70,11 @@ class OCI_AmpereA1_LLM(LLM):
             "n_threads": self.n_threads
         }
 
+        if self.chat_id is not None:
+            print(f'Deleting Chat ID: {self.chat_id}')
+            response = requests.delete(f'{self.service_endpoint}{self.chat_id}', headers=self.headers)
+            print(f'{response} - Chat deletion response - {response.json()}')
             
-        print("Calling OCI Ampere A1 LLM")
         response = requests.post(self.service_endpoint, params=params, headers=self.headers)
 
         tEla = time() - tStart
@@ -109,9 +112,9 @@ class OCI_AmpereA1_LLM(LLM):
         run_manager: Optional[CallbackManagerForLLMRun] = None,
         **kwargs: Any,
     ) -> str:
-        
+
         print('### Calling _call() ###')
-        
+        print("Calling OCI Ampere A1 LLM")
         if stop is not None:
             raise ValueError("stop kwargs are not permitted.")
 
