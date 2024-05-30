@@ -14,7 +14,7 @@ import requests, ast
 
 
 class OCI_AmpereA1_LLM(LLM):
-    debug: bool = True
+    debug: bool = False
 
     service_endpoint: str = "http://144.24.98.46:5005/api/chat/"
     model: str = "Llama-Pro-8B-Instruct" 
