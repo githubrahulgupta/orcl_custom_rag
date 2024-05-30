@@ -14,7 +14,7 @@ import requests, ast
 
 
 class OCI_AmpereA1_LLM(LLM):
-    debug: bool = False
+    debug: bool = True
 
     service_endpoint: str = "http://144.24.98.46:5005/api/chat/"
     model: str = "Llama-Pro-8B-Instruct" 
@@ -52,6 +52,7 @@ class OCI_AmpereA1_LLM(LLM):
     """
 
     def new_chat(self):
+        print('### Calling new_chat() ###')
          # calling OCI Ampere A1 LLM
         tStart = time()
 
@@ -79,19 +80,23 @@ class OCI_AmpereA1_LLM(LLM):
             print(f"Elapsed time: {round(tEla, 1)} sec...")
             print()
 
-        print(response)
+        print(f'Response from within new_chat(): {response}')
         self.chat_id = response.json() # new chat id
         print(f'Chat ID: {self.chat_id}')
+        self.new_chat_endpoint = f'{self.service_endpoint}{self.chat_id}/question'
+        print(f'Chat Endpoint: {self.new_chat_endpoint}')
+        print('### Ending new_chat() ###')
 
     def __init__(self, **kwargs):
-        # print(kwargs)
+        print('### Calling __init__() ###')
         super().__init__(**kwargs)
         model = self.model
         service_endpoint=self.service_endpoint
         headers = self.headers
-        self.new_chat()
-        self.new_chat_endpoint = f'{service_endpoint}{self.chat_id}/question'
-        print(f'Chat Endpoint: {self.new_chat_endpoint}')
+        # self.new_chat()
+        # self.new_chat_endpoint = f'{service_endpoint}{self.chat_id}/question'
+        # print(f'Chat Endpoint: {self.new_chat_endpoint}')
+        print('### Ending __init__() ###')
 
     @property
     def _llm_type(self) -> str:
@@ -104,6 +109,9 @@ class OCI_AmpereA1_LLM(LLM):
         run_manager: Optional[CallbackManagerForLLMRun] = None,
         **kwargs: Any,
     ) -> str:
+        
+        print('### Calling _call() ###')
+        
         if stop is not None:
             raise ValueError("stop kwargs are not permitted.")
 
@@ -112,6 +120,10 @@ class OCI_AmpereA1_LLM(LLM):
             print("The input prompt is:")
             print(prompt)
             print()
+    
+        self.new_chat()
+        # self.new_chat_endpoint = f'{self.service_endpoint}{self.chat_id}/question'
+        # print(f'Chat Endpoint: {self.new_chat_endpoint}')
     
         params = {
             'chat_id': self.chat_id, 
@@ -126,7 +138,7 @@ class OCI_AmpereA1_LLM(LLM):
             headers=self.headers,
         )
 
-        print(response)
+        print(f'Response from within _call(): {response}')
         json_resp = response.json()
         if self.debug:
             print(f'Original json response: {json_resp}')
@@ -137,7 +149,8 @@ class OCI_AmpereA1_LLM(LLM):
             print(f'AST converted json response: {resp_dict}')
 
         # print(f"Full response: {response.json()}")
-
+        
+        print('### Ending _call() ###')
         return resp_dict['choices'][0]['text'].strip()
 
     @property
